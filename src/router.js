@@ -1,5 +1,5 @@
 import React from "react";
-import LoggingPage from "./pages/logging-page";
+import LoggingPage from "./pages/LoggingPage";
 
 class Router extends React.Component {
   constructor(props) {
