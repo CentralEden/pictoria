@@ -10,7 +10,7 @@ export class LogTable extends React.Component {
     const logs = this.props.logs;
     return (
       <div>
-        <div>
+        <div style={{ overflow: "auto", height: "50vh" }}>
           <table id="table">
             <thead>
               <tr>
