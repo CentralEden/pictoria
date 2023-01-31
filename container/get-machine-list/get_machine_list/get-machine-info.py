@@ -7,12 +7,12 @@ import boto3
 from decimal import Decimal
 
 base_url = 'https://p-town.dmm.com'
-result_list = {'machines': []}
+result_list = []
 dynamo = boto3.resource('dynamodb')
 master_table = dynamo.Table('pictoria-master')
 
 with master_table.batch_writer() as bw:
-    for i in range(1, 2):
+    for i in range(1, 20):
         print(f'page {i}')
         url = f'{base_url}/machines/search?machine_type=0&sort=pv_desc&page={i}'
         r = requests.get(url)
@@ -32,15 +32,13 @@ with master_table.batch_writer() as bw:
                 detail_soup = BeautifulSoup(detail_r.content, "html.parser")
                 for b in detail_soup.find_all(text=re.compile('.*4\.0円（25個）…[0-9\.]*回転')):
                     border = re.search(r'…([0-9\.]+)回転', b).group(1)
-                    bw.put_item(Item={
-                        'type': 'machines',
-                        'name': name,
-                        'border': Decimal(border)
-                    })
-                    # result_list['machines'].append({
-                    #     'title': name,
-                    #     'border': float(border)
-                    # })
+                    if name not in result_list: 
+                        bw.put_item(Item={
+                            'type': 'machines',
+                            'name': name,
+                            'border': Decimal(border)
+                        })
+                        result_list.append(name)
 
 # print(result_list)
 # with open('./machine_info.json', 'w', encoding='utf-8') as f:
