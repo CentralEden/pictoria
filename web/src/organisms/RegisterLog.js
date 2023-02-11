@@ -3,8 +3,7 @@ import TextField from "@mui/material/TextField";
 import Card from "@mui/material/Card";
 import Button from "@mui/material/Button";
 import Autocomplete from "@mui/material/Autocomplete";
-// import axios from "axios";
-import Machines from "../api/machine_info.json";
+import { Machines } from "../api/machines";
 export class RegisterLog extends React.Component {
   constructor(props) {
     super(props);
@@ -13,19 +12,32 @@ export class RegisterLog extends React.Component {
       border: "",
       start: "",
       end: "",
+      machines: [],
     };
+  }
+
+  componentDidMount() {
+    Machines.getMachines()
+      .then((res) => this.setState({ machines: res.data.items }))
+      .catch((e) => {
+        alert("データの取得に失敗しました。");
+        console.log(e);
+      });
   }
 
   handleInputChange(key, e) {
     let input = {};
-    if (key != "name") {
+    if (key !== "name") {
       input[key] = e.target.value;
     } else {
-      if (e.target.innerText != "") {
+      if (e.target.innerText !== "") {
         let name = e.target.innerText;
         input[key] = name;
-        let modelInfo = Machines.machines.find((obj) => obj.title == name);
-        input["border"] = modelInfo.border;
+        let machineInfo = this.state.machines.find(
+          (machine) => machine.name === name
+        );
+        console.log(machineInfo);
+        input["border"] = machineInfo.border;
       } else {
         input[key] = e.target.value;
       }
@@ -41,7 +53,9 @@ export class RegisterLog extends React.Component {
             <div>
               <Autocomplete
                 freeSolo
-                options={Machines["machines"].map((option) => option.title)}
+                options={this.state.machines.map(
+                  (machineInfo) => machineInfo.name
+                )}
                 value={this.state.name}
                 onChange={(e) => this.handleInputChange("name", e)}
                 renderInput={(params) => (
@@ -55,14 +69,7 @@ export class RegisterLog extends React.Component {
                   />
                 )}
               />
-              {/* <TextField
-                label="機種"
-                size="small"
-                margin="dense"
-                variant="standard"
-                value={this.state.name}
-                onChange={(e) => this.handleInputChange("name", e)}
-              ></TextField> */}
+
               <TextField
                 label="ボーダー"
                 size="small"
@@ -72,13 +79,6 @@ export class RegisterLog extends React.Component {
                 type="number"
                 onChange={(e) => this.handleInputChange("border", e)}
               ></TextField>
-              {/* <Button
-                variant="outlined"
-                size="small"
-                onClick={() => this.searchModels()}
-              >
-                機種検索
-              </Button> */}
             </div>
             <div>
               <TextField
