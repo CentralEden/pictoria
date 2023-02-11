@@ -21,12 +21,13 @@ export class LogTable extends React.Component {
               </tr>
             </thead>
             <tbody>
-              {logs.map((log) => (
+              {logs.map((log, i) => (
                 <tr
                   style={{
                     backgroundColor:
                       log.cnt - log.border >= 0 ? "lightcyan" : "pink",
                   }}
+                  key={i}
                 >
                   <td>{log.date}</td>
                   <td>{log.name}</td>
