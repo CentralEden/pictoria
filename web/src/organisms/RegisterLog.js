@@ -3,6 +3,7 @@ import TextField from "@mui/material/TextField";
 import Card from "@mui/material/Card";
 import Button from "@mui/material/Button";
 import Autocomplete from "@mui/material/Autocomplete";
+import { NumberField } from "../molecules/NumberField";
 import { Machines } from "../api/machines";
 export class RegisterLog extends React.Component {
   constructor(props) {
@@ -31,13 +32,20 @@ export class RegisterLog extends React.Component {
       input[key] = e.target.value;
     } else {
       if (e.target.innerText !== "") {
-        let name = e.target.innerText;
-        input[key] = name;
-        let machineInfo = this.state.machines.find(
-          (machine) => machine.name === name
-        );
-        console.log(machineInfo);
-        input["border"] = machineInfo.border;
+        if (typeof e.target.value === "undefined") {
+          // 機種の×押下時
+          input[key] = "";
+        } else {
+          // 機種選択時
+          let name = e.target.innerText;
+          input[key] = name;
+          let machineInfo = this.state.machines.find(
+            (machine) => machine.name === name
+          );
+          if (machineInfo) {
+            input["border"] = machineInfo.border;
+          }
+        }
       } else {
         input[key] = e.target.value;
       }
@@ -69,38 +77,25 @@ export class RegisterLog extends React.Component {
                   />
                 )}
               />
-
-              <TextField
+              <NumberField
                 label="ボーダー"
-                size="small"
-                margin="dense"
-                variant="standard"
                 value={this.state.border}
-                type="number"
                 onChange={(e) => this.handleInputChange("border", e)}
-              ></TextField>
+              ></NumberField>
             </div>
             <div>
-              <TextField
+              <NumberField
                 label="開始回転数"
-                size="small"
-                margin="dense"
-                variant="standard"
                 value={this.state.start}
-                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                 onChange={(e) => this.handleInputChange("start", e)}
-              ></TextField>
+              ></NumberField>
             </div>
             <div>
-              <TextField
+              <NumberField
                 label="終了回転数"
-                size="small"
-                margin="dense"
-                variant="standard"
                 value={this.state.end}
-                inputProps={{ inputMode: "numeric", pattern: "[0-9]*" }}
                 onChange={(e) => this.handleInputChange("end", e)}
-              ></TextField>
+              ></NumberField>
             </div>
             <div style={{ textAlign: "right", margin: "0.5em" }}>
               <Button
