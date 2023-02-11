@@ -28,7 +28,8 @@ with master_table.batch_writer() as bw:
                 print(loc)
                 print(title.text)
                 name = f'{title.text}'
-                detail_r = requests.get(f'{base_url}{loc}')
+                info_url = f'{base_url}{loc}'
+                detail_r = requests.get(info_url)
                 detail_soup = BeautifulSoup(detail_r.content, "html.parser")
                 for b in detail_soup.find_all(text=re.compile('.*4\.0円（25個）…[0-9\.]*回転')):
                     border = re.search(r'…([0-9\.]+)回転', b).group(1)
@@ -36,11 +37,12 @@ with master_table.batch_writer() as bw:
                         bw.put_item(Item={
                             'type': 'machines',
                             'name': name,
-                            'border': Decimal(border)
+                            'border': Decimal(border),
+                            'info_url': info_url
                         })
                         result_list.append(name)
 
 # print(result_list)
 # with open('./machine_info.json', 'w', encoding='utf-8') as f:
-#     json.dump(result_list, f, ensure_ascii=False, indent=2)
+#     json.dump(result_list, f, aws acm list-certificates, indent=2)
 print('Finished')
