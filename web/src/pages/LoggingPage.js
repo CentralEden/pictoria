@@ -12,10 +12,10 @@ class LoggingPage extends React.Component {
   render() {
     return (
       <div>
+        <LogTable logs={this.state.logs}></LogTable>
         <RegisterLog
           onRegisterLog={(log) => this.registerLog(log)}
         ></RegisterLog>
-        <LogTable logs={this.state.logs}></LogTable>
       </div>
     );
   }
