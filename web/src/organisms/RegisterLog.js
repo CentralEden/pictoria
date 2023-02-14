@@ -3,8 +3,12 @@ import TextField from "@mui/material/TextField";
 import Card from "@mui/material/Card";
 import Button from "@mui/material/Button";
 import Autocomplete from "@mui/material/Autocomplete";
+import LaunchIcon from "@mui/icons-material/Launch";
+import Grid from "@mui/material/Grid";
+import { IconButton } from "@mui/material";
 import { NumberField } from "../molecules/NumberField";
 import { Machines } from "../api/machines";
+
 export class RegisterLog extends React.Component {
   constructor(props) {
     super(props);
@@ -13,11 +17,14 @@ export class RegisterLog extends React.Component {
       border: "",
       start: "",
       end: "",
+      info_url: "",
       machines: [],
+      isOpenWebDialog: false,
     };
   }
 
   componentDidMount() {
+    // 機種一覧取得
     Machines.getMachines()
       .then((res) => this.setState({ machines: res.data.items }))
       .catch((e) => {
@@ -31,6 +38,7 @@ export class RegisterLog extends React.Component {
     if (key !== "name") {
       input[key] = e.target.value;
     } else {
+      input["info_url"] = "";
       if (e.target.innerText !== "") {
         if (typeof e.target.value === "undefined") {
           // 機種の×押下時
@@ -44,6 +52,7 @@ export class RegisterLog extends React.Component {
           );
           if (machineInfo) {
             input["border"] = machineInfo.border;
+            input["info_url"] = machineInfo.info_url;
           }
         }
       } else {
@@ -58,45 +67,48 @@ export class RegisterLog extends React.Component {
       <div>
         <Card>
           <form id="inputArea" className="area" style={{ textAlign: "left" }}>
-            <div>
-              <Autocomplete
-                freeSolo
-                options={this.state.machines.map(
-                  (machineInfo) => machineInfo.name
-                )}
-                value={this.state.name}
-                onChange={(e) => this.handleInputChange("name", e)}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="機種"
-                    size="small"
-                    margin="dense"
-                    variant="standard"
-                    onChange={(e) => this.handleInputChange("name", e)}
-                  />
-                )}
-              />
-              <NumberField
-                label="ボーダー"
-                value={this.state.border}
-                onChange={(e) => this.handleInputChange("border", e)}
-              ></NumberField>
-            </div>
-            <div>
-              <NumberField
-                label="開始回転数"
-                value={this.state.start}
-                onChange={(e) => this.handleInputChange("start", e)}
-              ></NumberField>
-            </div>
-            <div>
-              <NumberField
-                label="終了回転数"
-                value={this.state.end}
-                onChange={(e) => this.handleInputChange("end", e)}
-              ></NumberField>
-            </div>
+            <Grid container alignItems="flex-end">
+              <Grid item xs={11}>
+                <Autocomplete
+                  freeSolo
+                  options={this.state.machines.map(
+                    (machineInfo) => machineInfo.name
+                  )}
+                  value={this.state.name}
+                  onChange={(e) => this.handleInputChange("name", e)}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="機種"
+                      size="small"
+                      margin="dense"
+                      variant="standard"
+                      onChange={(e) => this.handleInputChange("name", e)}
+                    />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={1}>
+                <IconButton target="_blank" href={this.state.info_url}>
+                  <LaunchIcon />
+                </IconButton>
+              </Grid>
+            </Grid>
+            <NumberField
+              label="ボーダー"
+              value={this.state.border}
+              onChange={(e) => this.handleInputChange("border", e)}
+            ></NumberField>
+            <NumberField
+              label="開始回転数"
+              value={this.state.start}
+              onChange={(e) => this.handleInputChange("start", e)}
+            ></NumberField>
+            <NumberField
+              label="終了回転数"
+              value={this.state.end}
+              onChange={(e) => this.handleInputChange("end", e)}
+            ></NumberField>
             <div style={{ textAlign: "right", margin: "0.5em" }}>
               <Button
                 variant="outlined"
@@ -131,9 +143,5 @@ export class RegisterLog extends React.Component {
     };
     this.setState({ start: this.state.end });
     return input;
-  }
-
-  searchModels() {
-    console.log(Machines);
   }
 }
