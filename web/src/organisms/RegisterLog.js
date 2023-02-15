@@ -1,13 +1,8 @@
 import React from "react";
-import TextField from "@mui/material/TextField";
 import Card from "@mui/material/Card";
 import Button from "@mui/material/Button";
-import Autocomplete from "@mui/material/Autocomplete";
-import LaunchIcon from "@mui/icons-material/Launch";
-import Grid from "@mui/material/Grid";
-import { IconButton } from "@mui/material";
 import { NumberField } from "../molecules/NumberField";
-import { Machines } from "../api/machines";
+import { SelectMachineField } from "../molecules/SelectMachineField";
 
 export class RegisterLog extends React.Component {
   constructor(props) {
@@ -17,47 +12,21 @@ export class RegisterLog extends React.Component {
       border: "",
       start: "",
       end: "",
-      info_url: "",
       machines: [],
       isOpenWebDialog: false,
     };
   }
 
-  componentDidMount() {
-    // 機種一覧取得
-    Machines.getMachines()
-      .then((res) => this.setState({ machines: res.data.items }))
-      .catch((e) => {
-        alert("データの取得に失敗しました。");
-        console.log(e);
-      });
-  }
-
   handleInputChange(key, e) {
     let input = {};
-    if (key !== "name") {
-      input[key] = e.target.value;
-    } else {
-      input["info_url"] = "";
-      if (e.target.innerText !== "") {
-        if (typeof e.target.value === "undefined") {
-          // 機種の×押下時
-          input[key] = "";
-        } else {
-          // 機種選択時
-          let name = e.target.innerText;
-          input[key] = name;
-          let machineInfo = this.state.machines.find(
-            (machine) => machine.name === name
-          );
-          if (machineInfo) {
-            input["border"] = machineInfo.border;
-            input["info_url"] = machineInfo.info_url;
-          }
-        }
-      } else {
-        input[key] = e.target.value;
-      }
+    input[key] = e.target.value;
+    this.setState(input);
+  }
+
+  handleMachineChange(machineInfo) {
+    let input = {};
+    if (machineInfo.border) {
+      input["border"] = machineInfo.border;
     }
     this.setState(input);
   }
@@ -67,33 +36,9 @@ export class RegisterLog extends React.Component {
       <div>
         <Card>
           <form id="inputArea" className="area" style={{ textAlign: "left" }}>
-            <Grid container alignItems="flex-end">
-              <Grid item xs={11}>
-                <Autocomplete
-                  freeSolo
-                  options={this.state.machines.map(
-                    (machineInfo) => machineInfo.name
-                  )}
-                  value={this.state.name}
-                  onChange={(e) => this.handleInputChange("name", e)}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="機種"
-                      size="small"
-                      margin="dense"
-                      variant="standard"
-                      onChange={(e) => this.handleInputChange("name", e)}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={1}>
-                <IconButton target="_blank" href={this.state.info_url}>
-                  <LaunchIcon />
-                </IconButton>
-              </Grid>
-            </Grid>
+            <SelectMachineField
+              onChange={(machineInfo) => this.handleMachineChange(machineInfo)}
+            ></SelectMachineField>
             <NumberField
               label="ボーダー"
               value={this.state.border}
