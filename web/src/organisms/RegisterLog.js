@@ -13,7 +13,6 @@ export class RegisterLog extends React.Component {
       start: "",
       end: "",
       machines: [],
-      isOpenWebDialog: false,
     };
   }
 
