@@ -24,6 +24,7 @@ export class RegisterLog extends React.Component {
 
   handleMachineChange(machineInfo) {
     let input = {};
+    input["name"] = machineInfo.name;
     if (machineInfo.border) {
       input["border"] = machineInfo.border;
     }
@@ -72,11 +73,9 @@ export class RegisterLog extends React.Component {
     const formatDatetime = (dt) => {
       let h = dt.getHours();
       let m = dt.getMinutes();
-      let s = dt.getSeconds();
       if (h < 10) h = "0" + h;
       if (m < 10) m = "0" + m;
-      if (s < 10) s = "0" + s;
-      let hms = h + ":" + m + ":" + s;
+      let hms = h + ":" + m;
       return hms;
     };
     let input = {
