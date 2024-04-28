@@ -10,6 +10,9 @@ REGION=$REGION
 USER_POOL_ID=$USER_POOL_ID
 APP_CLIENT_ID=$APP_CLIENT_ID
 DOMAIN=$DOMAIN
+REDIRECT_URI=$REDIRECT_URI
+HOME_URL=$HOME_URL
+LOGOUT_URI=$LOGOUT_URI
 # Lambdaの設定値
 FUNCTION_NAME=$FUNCTION_NAME
 LAMBDA_REGION=$LAMBDA_REGION 
@@ -22,6 +25,7 @@ sed -e "s/{{REGION}}/$REGION/" \
     -e "s/{{USER_POOL_ID}}/$USER_POOL_ID/" \
     -e "s/{{APP_CLIENT_ID}}/$APP_CLIENT_ID/" \
     -e "s/{{DOMAIN}}/$DOMAIN/" \
+    -e "s|{{REDIRECT_URI}}|$REDIRECT_URI?redirect_uri=$HOME_URL\&response_type=code\&client_id=$APP_CLIENT_ID\&state=/|" \
     index.template.js > temp_index.js
 
 # esbuildを使用してJavaScriptファイルをバンドルし、圧縮
