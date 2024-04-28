@@ -28,19 +28,41 @@ with master_table.batch_writer() as bw:
                 print(loc)
                 print(title.text)
                 name = f'{title.text}'
+                # 重複排除
+                if name in result_list:
+                    continue
                 info_url = f'{base_url}{loc}'
-                detail_r = requests.get(info_url)
+
+                try:
+                    detail_r = requests.get(info_url)
+                except requests.exceptions.ChunkedEncodingError:
+                    detail_r = requests.get(info_url)
+                except Exception as e:
+                    print(e)
+                    continue
+                
                 detail_soup = BeautifulSoup(detail_r.content, "html.parser")
+                # ボーダー
                 for b in detail_soup.find_all(text=re.compile('.*4\.0円（25個）…[0-9\.]*回転')):
                     border = re.search(r'…([0-9\.]+)回転', b).group(1)
-                    if name not in result_list: 
-                        bw.put_item(Item={
-                            'type': 'machines',
-                            'name': name,
-                            'border': Decimal(border),
-                            'info_url': info_url
-                        })
-                        result_list.append(name)
+                # 導入日
+                rollout_date_raw = detail_soup.find(text='導入開始日').parent.parent.find('td').text
+                rollout_date = re.search(r'\d\d\d\d/\d\d/\d\d', rollout_date_raw)
+                if rollout_date is None:
+                    print('導入日取得失敗')
+                    continue
+                rollout_date = rollout_date.group()
+                print(rollout_date)
+
+                # DB書き込み
+                bw.put_item(Item={
+                    'type': 'machines',
+                    'name': name,
+                    'border': Decimal(border),
+                    'info_url': info_url,
+                    'rollout_date': rollout_date
+                })
+                result_list.append(name)
 
 # print(result_list)
 # with open('./machine_info.json', 'w', encoding='utf-8') as f:
