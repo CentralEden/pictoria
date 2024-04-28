@@ -1,13 +1,18 @@
 #!/bin/bash
 
+# .env ファイルから環境変数を読み込む
+if [ -f .env ]; then
+    export $(cat .env | xargs)
+fi
+
 # Cognitoの設定値
-REGION=""
-USER_POOL_ID=""
-APP_CLIENT_ID=""
-DOMAIN=""
+REGION=$REGION
+USER_POOL_ID=$USER_POOL_ID
+APP_CLIENT_ID=$APP_CLIENT_ID
+DOMAIN=$DOMAIN
 # Lambdaの設定値
-FUNCTION_NAME=""
-LAMBDA_REGION="" # Lambdaのリージョンを指定
+FUNCTION_NAME=$FUNCTION_NAME
+LAMBDA_REGION=$LAMBDA_REGION 
 
 # スクリプトの存在するディレクトリに移動
 cd "$(dirname "$0")"
