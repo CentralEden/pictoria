@@ -1,31 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import { RegisterLog } from "../organisms/RegisterLog";
 import { LogTable } from "../organisms/LogTable";
-class LoggingPage extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      logs: [],
-    };
-  }
 
-  render() {
-    return (
-      <div>
-        <LogTable logs={this.state.logs}></LogTable>
-        <RegisterLog
-          onRegisterLog={(log) => this.registerLog(log)}
-        ></RegisterLog>
+function LoggingPage() {
+  const [logs, setLogs] = useState([]);
+
+  const registerLog = (log) => {
+    setLogs(prevLogs => [...prevLogs, log]);
+    console.log(logs);
+  };
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <div style={{ flex: 1 }}> {/* 残りの領域をLogTableに使う */}
+        <LogTable logs={logs} />
       </div>
-    );
-  }
-
-  registerLog(log) {
-    const logs = this.state.logs.slice().concat([log]);
-    this.setState({
-      logs: logs,
-    });
-    console.log(this.state.logs);
-  }
+      <div style={{ width: '100%' }}> {/* RegisterLogのサイズを子要素に合わせて固定 */}
+        <RegisterLog onRegisterLog={registerLog} />
+      </div>
+    </div>
+  );
 }
+
 export default LoggingPage;
+

@@ -1,26 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import LoggingPage from "./pages/LoggingPage";
 
-class Router extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      page: "logging",
-      pages: {
-        logging: <LoggingPage />,
-      },
-    };
-  }
+import Header from "./organisms/Header"; // Header component imported
 
-  getPageComponent() {
+function Router() {
+  const [page, ] = useState("logging");
+
+  const getPageComponent = () => {
     const pages = {
       logging: <LoggingPage />,
     };
-    return pages[this.state.page];
-  }
+    return pages[page];
+  };
 
-  render() {
-    return <div>{this.getPageComponent()}</div>;
-  }
+  return (
+    <div style={{ width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <div style={{ width: '100%' }}> {/* Headerのサイズを子要素に合わせて固定 */}
+        <Header /> {/* Header component added */}
+      </div>
+      <div style={{ flex: 1 }}> {/* Header以外の範囲すべてに広がるようにスタイルを追加 */}
+        {getPageComponent()}
+      </div>
+    </div>
+  );
 }
+
 export default Router;

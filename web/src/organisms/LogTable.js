@@ -111,9 +111,9 @@ export class LogTable extends React.Component {
 
   render() {
     // const logs = this.props.logs;
-    console.log(this.props.logs);
+    // console.log(this.props.logs);
     return (
-      <Paper style={{ height: "50vh", width: "100%" }}>
+      <Paper style={{ height: "100%", width: "100%" }}>
         <TableVirtuoso
           data={this.props.logs}
           components={this.VirtuosoTableComponents}
@@ -121,36 +121,6 @@ export class LogTable extends React.Component {
           itemContent={(_index, row) => this.rowContent(_index, row)}
         />
       </Paper>
-      // <div>
-      //   <div style={{ overflow: "auto", height: "50vh" }}>
-      //     <table id="table">
-      //       <thead>
-      //         <tr>
-      //           <th>時間</th>
-      //           <th>台名</th>
-      //           <th>ボーダー</th>
-      //           <th>回転数</th>
-      //         </tr>
-      //       </thead>
-      //       <tbody>
-      //         {logs.map((log, i) => (
-      //           <tr
-      //             style={{
-      //               backgroundColor:
-      //                 log.cnt - log.border >= 0 ? "lightcyan" : "pink",
-      //             }}
-      //             key={i}
-      //           >
-      //             <td>{log.date}</td>
-      //             <td>{log.name}</td>
-      //             <td>{log.border}</td>
-      //             <td>{log.cnt}</td>
-      //           </tr>
-      //         ))}
-      //       </tbody>
-      //     </table>
-      //   </div>
-      // </div>
     );
   }
 }
