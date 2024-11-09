@@ -1,0 +1,12 @@
+version: '3'
+
+includes:
+  web:
+    taskfile: ./web/Taskfile.yml
+    dir: ./web
+
+
+tasks:
+  test:
+    cmds:
+      - echo "test"
