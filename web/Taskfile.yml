@@ -10,6 +10,10 @@ tasks:
   build:
     cmds:
       - pnpm run build
+  deploy:
+    deps: [build]
+    cmds:
+      - aws s3 sync dist s3://{{.AWS_BUCKET}} --profile {{.AWS_PROFILE}}
   lint:
     cmds:
       - pnpm run lint

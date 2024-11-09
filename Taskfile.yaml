@@ -10,6 +10,9 @@ includes:
 
 env:
   WORLD: World!
+vars:
+  AWS_PROFILE: pictoria
+  AWS_BUCKET: p-logger
 
 dotenv: ['.env', '{{.ENV}}/.env.', '{{.HOME}}/.env']
 
@@ -17,7 +20,7 @@ tasks:
   hello:
     desc: Hello, World!
     cmds:
-      - echo ${HELLO} ${WORLD} ${ENV} {{.ENV_CONST}}
+      - echo ${HELLO} ${WORLD} ${ENV} {{.ENV_CONST}} {{.AWS_PROFILE}}
       - task: date
     vars:
       ENV_CONST: const
@@ -29,4 +32,8 @@ tasks:
   date:
     cmds:
       - date
+  aws-init:
+    cmds:
+      - aws configure --profile {{.AWS_PROFILE}}
+
 
