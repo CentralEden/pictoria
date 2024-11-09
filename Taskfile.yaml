@@ -4,9 +4,29 @@ includes:
   web:
     taskfile: ./web/Taskfile.yml
     dir: ./web
+    optional: true
+    aliases:
+      - f
 
+env:
+  WORLD: World!
+
+dotenv: ['.env', '{{.ENV}}/.env.', '{{.HOME}}/.env']
 
 tasks:
-  test:
+  hello:
+    desc: Hello, World!
     cmds:
-      - echo "test"
+      - echo ${HELLO} ${WORLD} ${ENV} {{.ENV_CONST}}
+      - task: date
+    vars:
+      ENV_CONST: const
+    deps: [date]
+    env:
+      HELLO: Hello,
+    aliases:
+      - h
+  date:
+    cmds:
+      - date
+
