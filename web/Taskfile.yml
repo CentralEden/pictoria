@@ -1,6 +1,19 @@
 version: '3'
 
 tasks:
+  install:
+    cmds:
+      - pnpm install
   dev:
     cmds:
-      - npm run dev
+      - pnpm run dev
+  build:
+    cmds:
+      - pnpm run build
+  lint:
+    cmds:
+      - pnpm run lint
+  preview:
+    deps: [build]
+    cmds:
+      - pnpm run preview
