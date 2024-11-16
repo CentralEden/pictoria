@@ -8,7 +8,7 @@ type NavItem = {
   badge?: number
 }
 
-const Footer = () => {
+const Footer = ({ className }: React.HTMLAttributes<HTMLElement>) => {
   const location = useLocation()
 
   const navItems: NavItem[] = [
@@ -22,10 +22,15 @@ const Footer = () => {
       label: 'プロフィール', 
       icon: <User className="w-6 h-6" /> 
     },
+    { 
+      path: '/about', 
+      label: 'アバウト', 
+      icon: <User className="w-6 h-6" /> 
+    },
   ]
 
   return (
-    <footer className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg">
+    <footer className={`bg-white border-t border-gray-200 shadow-lg ${className || ''}`}>
       <nav className="max-w-lg mx-auto">
         <ul className="flex justify-around items-center h-16">
           {navItems.map((item) => (
