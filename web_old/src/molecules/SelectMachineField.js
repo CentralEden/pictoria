@@ -16,7 +16,8 @@ export class SelectMachineField extends React.Component {
 
   componentDidMount() {
     // 機種一覧取得
-    Machines.getMachines()
+    const today = Math.floor(new Date().setHours(0, 0, 0, 0) / 1000);
+    Machines.getMachines(today)
       .then((res) => this.setState({ machines: res.data.items }))
       .catch((e) => {
         alert("データの取得に失敗しました。");
