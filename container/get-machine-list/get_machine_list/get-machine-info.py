@@ -12,7 +12,7 @@ dynamo = boto3.resource('dynamodb')
 master_table = dynamo.Table('pictoria-master')
 
 with master_table.batch_writer() as bw:
-    for i in range(1, 20):
+    for i in range(1, 10):
         print(f'page {i}')
         url = f'{base_url}/machines/search?machine_type=0&sort=pv_desc&page={i}'
         r = requests.get(url)
@@ -32,6 +32,7 @@ with master_table.batch_writer() as bw:
                 if name in result_list:
                     continue
                 info_url = f'{base_url}{loc}'
+                print(info_url)
 
                 try:
                     detail_r = requests.get(info_url)
@@ -47,11 +48,12 @@ with master_table.batch_writer() as bw:
                     border = re.search(r'…([0-9\.]+)回転', b).group(1)
                 # 導入日
                 rollout_date_raw = detail_soup.find(text='導入開始日').parent.parent.find('td').text
-                rollout_date = re.search(r'\d\d\d\d/\d\d/\d\d', rollout_date_raw)
-                if rollout_date is None:
+                rollout_date = re.search(r'\d\d\d\d年\d\d月\d\d日', rollout_date_raw)
+                if rollout_date:
+                    rollout_date = rollout_date.group().replace('年', '/').replace('月', '/').replace('日', '')
+                else:
                     print('導入日取得失敗')
                     continue
-                rollout_date = rollout_date.group()
                 print(rollout_date)
 
                 # DB書き込み
